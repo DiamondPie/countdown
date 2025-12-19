@@ -350,8 +350,9 @@ footer {
     .countdown-container { gap: 15px; }
     .countdown-box { min-width: 110px; padding: 20px 10px; }
     .digit, .static-value { font-size: 3rem; margin-bottom: 0; }
+    .static-value { margin-top: 5px; }
     .countdown-label { font-size: 1rem; }
-    .ticker-view { margin-bottom: 0;}
+    .ticker-view { margin-top: 5px; margin-bottom: 0;}
 }
 
 @media (max-width: 600px) {
