@@ -1,0 +1,162 @@
+/* ================= 弹窗组件样式 ================= */
+
+/* Dialog 基础样式 */
+dialog.tech-dialog {
+    /* 修正点 1: 调整宽度和最大宽度 */
+    max-width: 600px;
+    width: 80%;
+    
+    margin: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    overflow: visible;
+    color: #fff;
+    
+    /* 默认透明，依靠动画显示 */
+    opacity: 0; 
+}
+
+/* --- 进场动画 (当 dialog 有 open 属性时触发) --- */
+dialog.tech-dialog[open] {
+    opacity: 1;
+    animation: dialog-show 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* 进场 - 背景遮罩 */
+dialog.tech-dialog[open]::backdrop {
+    background: rgba(4, 10, 20, 0.8);
+    animation: backdrop-show 0.4s ease forwards;
+}
+
+/* --- 退场动画 (通过 JS 添加 .closing 类触发) --- */
+dialog.tech-dialog.closing {
+    animation: dialog-hide 0.3s ease forwards;
+}
+
+/* 退场 - 背景遮罩 */
+dialog.tech-dialog.closing::backdrop {
+    animation: backdrop-hide 0.3s ease forwards;
+    pointer-events: none; /* 防止退场时误触 */
+}
+
+/* --- 关键帧定义 --- */
+
+/* 弹窗主体 - 出现 (Scale 0.95 -> 1) */
+@keyframes dialog-show {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* 弹窗主体 - 消失 */
+@keyframes dialog-hide {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+}
+
+/* 背景 - 出现 (模糊与透明度渐变) */
+@keyframes backdrop-show {
+    0% {
+        opacity: 0;
+        backdrop-filter: blur(0);
+        -webkit-backdrop-filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+}
+
+/* 背景 - 消失 */
+@keyframes backdrop-hide {
+    0% {
+        opacity: 1;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    100% {
+        opacity: 0;
+        backdrop-filter: blur(0);
+        -webkit-backdrop-filter: blur(0);
+    }
+}
+
+/* 内容容器 (保持不变) */
+.dialog-content-wrapper {
+    background: linear-gradient(145deg, rgba(16, 36, 64, 0.95), rgba(12, 27, 44, 0.98));
+    border: 1.5px solid rgba(79, 172, 254, 0.4);
+    box-shadow: 0 0 40px rgba(79, 172, 254, 0.2), inset 0 0 20px rgba(79, 172, 254, 0.05);
+    border-radius: 20px;
+    padding: 30px 25px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 图标区域 */
+.dialog-icon-container {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    /* 默认颜色，JS中会动态修改 */
+    color: #4facfe; 
+    text-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+}
+
+/* 标题样式 */
+.dialog-title {
+    font-family: 'Aldrich', sans-serif;
+    font-size: 1.5rem;
+    font-weight: lighter;
+    color: #fff;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* 文本样式 */
+.dialog-message {
+    font-size: 1rem;
+    color: #a8d0ff;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-weight: 300;
+}
+
+/* 科技感按钮 */
+.tech-btn {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid #4facfe;
+    color: #4facfe;
+    padding: 10px 30px;
+    font-family: 'Aldrich', sans-serif;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    outline: none;
+}
+
+.tech-btn:hover {
+    background: #4facfe;
+    color: #0c1b2c;
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+    transform: translateY(-2px);
+}
+
+/* 针对不同类型的特殊样式 */
+.icon-warn { color: #ffbc00 !important; text-shadow: 0 0 20px rgba(255, 188, 0, 0.5); }
+.icon-celebrate { color: #ff0055 !important; text-shadow: 0 0 20px rgba(255, 0, 85, 0.6); }
