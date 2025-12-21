@@ -1,4 +1,7 @@
 let userTzPreference = Cookie.get('userTimezone') || 'CST';
+const params = new URLSearchParams(window.location.search);
+const debug = params.get('debug');
+const loadTime = new Date()
 
 // 创建背景动画元素
 function createBackgroundAnimation() {
@@ -108,29 +111,77 @@ function initHeaderElapsedDays() {
     dayPlural.textContent = elapsedDays > 1 ? 'days':'day';
 }
 
+function getTargetDateByPreference() {
+    if (debug) {
+        // 调试最后20秒倒计时
+        return new Date(loadTime.getTime() + 20 * 1000);
+    }
+
+    if (userTzPreference === 'CST') {
+        // 计算北京时间 2026-01-01 00:00:00 对应的本地时间戳
+        // 北京时间比 UTC 快 8 小时
+        return new Date(Date.UTC(2025, 11, 31, 16, 0, 0));
+    } 
+    // 使用用户本地系统的 2026-01-01 00:00:00
+    return new Date(2026, 0, 1, 0, 0, 0);
+}
+
+function toFixedFloor(num, n) {
+    const factor = Math.pow(10, n);
+    return (Math.floor(num * factor) / factor).toFixed(n);
+}
 
 // 更新倒计时
 function updateCountdown() {
     const now = new Date();
-    let targetDate;
-    
-    if (userTzPreference === 'CST') {
-        // 计算北京时间 2026-01-01 00:00:00 对应的本地时间戳
-        // 北京时间比 UTC 快 8 小时
-        targetDate = new Date(Date.UTC(2025, 11, 31, 16, 0, 0));
-    } 
-    else {
-        // 使用用户本地系统的 2026-01-01 00:00:00
-        targetDate = new Date(2026, 0, 1, 0, 0, 0);
-    }
+    let targetDate = getTargetDateByPreference();
     
     // 计算时间差
     const timeDiff = targetDate.getTime() - now.getTime();
+    console.log("Timediff:", timeDiff)
     
+    // 计算2025年进度
+    const startOfYear = new Date(2025, 0, 1);
+    // const endOfYear = new Date(2025, 11, 31, 23, 59, 59);
+    const totalYearMs = targetDate.getTime() - startOfYear.getTime();
+    const elapsedYearMs = now.getTime() - startOfYear.getTime();
+    
+    let progressPercentage = Math.min(100, Math.max(0, (elapsedYearMs / totalYearMs) * 100));
+    const percentEl = document.getElementById('progress-percentage');
+
+    document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+    // 更新进度百分比文字颜色
+    // 映射范围：0% 为色相 190 (青蓝), 100% 为色相 0 (红色)
+    const hue = 190 - (progressPercentage * 1.9); 
+
+    if (percentEl) {
+        percentEl.textContent = `${toFixedFloor(progressPercentage, 2)}%`;
+        // 设置 HSL 颜色，保持较高的饱和度(80%)和适中的亮度(70%)以确保护眼且亮丽
+        percentEl.style.color = `hsl(${hue}, 80%, 70%)`;
+        // 可选：添加一点发光感
+        percentEl.style.textShadow = `0 0 10px hsl(${hue}, 80%, 50%, 0.3)`;
+    }
+    // 计算已过天数
+    // const elapsedDays = Math.floor(elapsedYearMs / (1000 * 60 * 60 * 24));
+    
+    // // 更新 Header 中的“已过天数”
+    // const elapsedEl = document.getElementById('header-elapsed-days');
+    // if (elapsedEl) elapsedEl.textContent = elapsedDays;
+    
+    document.getElementById('current-date').textContent = `Today is ` +
+        `${now.getFullYear()}.` +
+        `${String(now.getMonth() + 1).padStart(2, '0')}.` +
+        `${String(now.getDate()).padStart(2, '0')}`;
+    document.getElementById('update-time').textContent =
+        `${String(now.getHours()).padStart(2, '0')}:` +
+        `${String(now.getMinutes()).padStart(2, '0')}:` +
+        `${String(now.getSeconds()).padStart(2, '0')}`;
+
     // 倒计时结束处理
     if (timeDiff < 0) {
-         document.getElementById('days').textContent = '000';
-         return;
+        document.getElementById('days').textContent = '000';
+        triggerNewYear();
+        return;
     }
     
     const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
@@ -158,44 +209,6 @@ function updateCountdown() {
     document.getElementById('day-text').textContent = days > 1 ? 'days':'day';
     document.getElementById('hour-text').textContent = hours > 1 ? 'hours':'hour'
 
-    // 计算2025年进度
-    const startOfYear = new Date(2025, 0, 1);
-    const endOfYear = new Date(2025, 11, 31, 23, 59, 59);
-    const totalYearMs = endOfYear.getTime() - startOfYear.getTime();
-    const elapsedYearMs = now.getTime() - startOfYear.getTime();
-    
-    let progressPercentage = Math.min(100, Math.max(0, (elapsedYearMs / totalYearMs) * 100));
-    const percentEl = document.getElementById('progress-percentage');
-
-    document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
-    // 更新进度百分比文字颜色
-    // 映射范围：0% 为色相 190 (青蓝), 100% 为色相 0 (红色)
-    const hue = 190 - (progressPercentage * 1.9); 
-
-    if (percentEl) {
-        percentEl.textContent = `${progressPercentage.toFixed(2)}%`;
-        // 设置 HSL 颜色，保持较高的饱和度(80%)和适中的亮度(70%)以确保护眼且亮丽
-        percentEl.style.color = `hsl(${hue}, 80%, 70%)`;
-        // 可选：添加一点发光感
-        percentEl.style.textShadow = `0 0 10px hsl(${hue}, 80%, 50%, 0.3)`;
-    }
-    // 计算已过天数
-    // const elapsedDays = Math.floor(elapsedYearMs / (1000 * 60 * 60 * 24));
-    
-    // // 更新 Header 中的“已过天数”
-    // const elapsedEl = document.getElementById('header-elapsed-days');
-    // if (elapsedEl) elapsedEl.textContent = elapsedDays;
-    
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('current-date').textContent = `Today is ` +
-        `${now.getFullYear()}.` +
-        `${String(now.getMonth() + 1).padStart(2, '0')}.` +
-        `${String(now.getDate()).padStart(2, '0')}`;
-    document.getElementById('update-time').textContent =
-        `${String(now.getHours()).padStart(2, '0')}:` +
-        `${String(now.getMinutes()).padStart(2, '0')}:` +
-        `${String(now.getSeconds()).padStart(2, '0')}`;
-
 // ----------------------------
 
 document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
@@ -211,8 +224,11 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCountdown();
 
             const tzName = e.target.value === 'CST' ? "Beijing Time (UTC+8)" : "System Local Time";
+            const toastContent = debug ? 
+                '<i class="fa-solid fa-circle-xmark" style="margin-right: 8px; color: #e8466c;"></i> Timezone switching is unavailable under debugger mode.' :
+                `<i class="fas fa-check-circle" style="margin-right: 8px; color: #00f2fe;"></i> Timezone switched to: ${tzName}`
             Toastify({
-                text: `<i class="fas fa-check-circle" style="margin-right: 8px; color: #00f2fe;"></i> Timezone switched to: ${tzName}`,
+                text: toastContent,
                 duration: 3000,
                 gravity: "top", 
                 position: "center",
@@ -235,6 +251,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     createBackgroundAnimation();
+    if (getTargetDateByPreference().getTime() - loadTime.getTime() > 2*60*1000) {
+        // 保持观感，最后2分钟不再检测时区差异
+        checkTimezone();
+    }
     initTickerStrips();
     initHeaderElapsedDays();
     updateCountdown();

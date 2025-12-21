@@ -176,6 +176,7 @@ header {
 
 .ticker-view {
     height: var(--digit-height);
+    gap: 4px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -228,6 +229,7 @@ header {
 }
 
 .static-value {
+    letter-spacing: -3px;
     font-size: 4.5rem;
     font-weight: 100;
     margin-bottom: 10px;

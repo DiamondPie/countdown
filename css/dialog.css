@@ -1,7 +1,42 @@
 /* ================= 弹窗组件样式 ================= */
 
+.dialog-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(4, 10, 20, 0.8);
+    z-index: 998; /* 层级：低于弹窗，高于页面内容 */
+    
+    /* 默认隐藏 */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s;
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+}
+
+/* 遮罩显示状态 */
+.dialog-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    /* 如果需要完全一致的动画曲线，可以使用 animation，这里简化为 transition 亦可 */
+}
+
 /* Dialog 基础样式 */
 dialog.tech-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* 使用 translate 居中，注意这里会和动画中的 transform 叠加，需要小心处理 */
+
+    top: 0; left: 0; right: 0; bottom: 0;
+    margin: auto;
+    height: fit-content;
+
     /* 修正点 1: 调整宽度和最大宽度 */
     max-width: 600px;
     width: 80%;
@@ -15,6 +50,8 @@ dialog.tech-dialog {
     
     /* 默认透明，依靠动画显示 */
     opacity: 0; 
+
+    z-index: 999;
 }
 
 /* --- 进场动画 (当 dialog 有 open 属性时触发) --- */
@@ -24,10 +61,10 @@ dialog.tech-dialog[open] {
 }
 
 /* 进场 - 背景遮罩 */
-dialog.tech-dialog[open]::backdrop {
+/* dialog.tech-dialog[open]::backdrop {
     background: rgba(4, 10, 20, 0.8);
     animation: backdrop-show 0.4s ease forwards;
-}
+} */
 
 /* --- 退场动画 (通过 JS 添加 .closing 类触发) --- */
 dialog.tech-dialog.closing {
@@ -35,10 +72,10 @@ dialog.tech-dialog.closing {
 }
 
 /* 退场 - 背景遮罩 */
-dialog.tech-dialog.closing::backdrop {
+/* dialog.tech-dialog.closing::backdrop {
     animation: backdrop-hide 0.3s ease forwards;
-    pointer-events: none; /* 防止退场时误触 */
-}
+    pointer-events: none;
+} */
 
 /* --- 关键帧定义 --- */
 

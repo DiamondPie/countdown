@@ -5,11 +5,17 @@ const DialogManager = {
     msgEl: document.getElementById('dialog-message'),
     iconArea: document.getElementById('dialog-icon-area'),
     btn: document.getElementById('dialog-btn'),
+    backdropEl: null,
     isClosing: false, // 防止重复触发关闭
 
     init() {
         if(!this.el) return;
         
+        // 动态创建遮罩层并插入到body
+        this.backdropEl = document.createElement('div');
+        this.backdropEl.className = 'dialog-backdrop';
+        document.body.appendChild(this.backdropEl);
+
         // 按钮点击关闭
         this.btn.addEventListener('click', () => this.close());
         
@@ -29,6 +35,8 @@ const DialogManager = {
             if (this.el.classList.contains('closing')) {
                 this.el.close();
                 this.el.classList.remove('closing');
+                // 隐藏遮罩
+                this.backdropEl.classList.remove('active');
                 this.isClosing = false;
             }
         });
@@ -56,10 +64,14 @@ const DialogManager = {
             iconHtml = '<i class="fas fa-glass-cheers"></i>';
             this.iconArea.classList.add('icon-celebrate');
             this.btn.innerText = "Happy New Year!";
+            // 触发烟花动画
+            this.triggerFireworks();
         }
         
         this.iconArea.innerHTML = iconHtml;
-        this.el.showModal();
+        this.el.show();
+        // 手动激活遮罩
+        this.backdropEl.classList.add('active');
     },
 
     close() {
@@ -70,6 +82,45 @@ const DialogManager = {
         this.el.classList.add('closing');
         
         // 动画结束后，上面的 animationend 监听器会负责调用 el.close()
+        this.backdropEl.classList.remove('active');
+    },
+
+    triggerFireworks() {
+        const duration = 15 * 1000;
+        const animationEnd = Date.now() + duration;
+        const colors = ['#ff0000', '#ffd700', '#ff4500', '#ff8c00', '#ee2c2c'];
+
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+
+            const particleCount = 100 * (timeLeft / duration);
+            
+            // 核心修改：设置 zIndex 必须大于 CSS 中 dialog 的 999
+            // 大多数 confetti 库默认是 100，所以这里必须显式指定
+            const fireworkOptions = {
+                particleCount: particleCount,
+                startVelocity: 35,
+                spread: 360,
+                ticks: 80,
+                origin: { x: Math.random(), y: Math.random() * 0.5 },
+                colors: colors,
+                shapes: ['star', 'circle'],
+                gravity: 0.8,
+                scalar: 0.7,
+                drift: 0,
+                zIndex: 2000 // <--- 关键！必须大于 dialog 的 z-index (999)
+            };
+
+            confetti({ ...fireworkOptions });
+            confetti({ 
+                ...fireworkOptions, 
+                particleCount: particleCount / 2, 
+                scalar: 1.2, 
+                shapes: ['circle'] 
+            });
+
+        }, 300);
     }
 };
 
@@ -104,9 +155,6 @@ function checkTimezone() {
     }
 }
 
-// 页面加载后立即检测
-checkTimezone();
-
 /* ================== 2. 模拟倒计时结束逻辑 ================== */
 // 请将此函数放入你原有的倒计时 update 循环中
 // 当 totalSeconds <= 0 时调用
@@ -115,8 +163,6 @@ let hasCelebrated = false; // 防止重复弹窗
 function triggerNewYear() {
     if (hasCelebrated) return;
     hasCelebrated = true;
-
-    // TODO: 礼花音效或动画
     
     DialogManager.open(
         'celebrate',
