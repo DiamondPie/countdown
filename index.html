@@ -4,11 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025年结束倒计时</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        /* 自定义从右侧滑入的动画 */
+        @keyframes toastify-slideInRight {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 自定义 Toastify 消失动画：向右侧滑出 */
+        @keyframes toastify-right-out {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        /* 覆盖 Toastify 的默认进入类 */
+        .toastify.on {
+            animation: toastify-slideInRight 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards;
+        }
+
+        /* 当 Toast 被移除时（消失中） */
+        /* 注意：Toastify 在消失时会移除 .on 类，我们可以通过一个简单的类名覆盖或让 transition 处理 */
+        .toastify:not(.on) {
+            animation: toastify-right-out 0.4s ease-in forwards;
+        }
+
+        /* 移动端优化：确保不会因为滑出动作导致页面横向滚动条出现 */
+        body {
+            overflow-x: hidden;
+        }
+    </style>
     <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Aldrich&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/dialog.css">
 </head>
 <body>
     <div class="bg-animation" id="bgAnimation"></div>
@@ -89,6 +131,7 @@
                 <div class="progress-title">
                     <span>2025 Progress</span>
                     <span id="progress-percentage">0%</span>
+                    <!-- TODO: 进度条根据数值显示不同颜色 -->
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill"></div>
@@ -100,6 +143,24 @@
                 </div>
             </div>
             
+            <div class="timezone-fab-container">
+                <div class="timezone-fab-menu">
+                    <div class="timezone-options">
+                        <span class="tz-label">Select Timezone</span>
+                        <div class="select-wrapper">
+                            <select id="timezone-select">
+                                <option value="CST">Beijing</option>
+                                <option value="LOCAL">System</option>
+                            </select>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="timezone-fab-icon">
+                        <i class="fa-solid fa-earth-americas"></i>
+                    </div>
+                </div>
+            </div>
+
             </main>
         
         <footer>
@@ -114,16 +175,18 @@
                 <i class="fas fa-info-circle"></i>
             </div>
             
-            <h3 id="dialog-title" class="dialog-title">System Notification</h3>
-            <p id="dialog-message" class="dialog-message">Message content...</p>
+            <h3 id="dialog-title" class="dialog-title"></h3>
+            <p id="dialog-message" class="dialog-message"></p>
             
             <div class="dialog-actions">
-                <button id="dialog-btn" class="tech-btn">确 认</button>
+                <button id="dialog-btn" class="tech-btn"></button>
             </div>
         </div>
     </dialog>
 
-    <script src="js/animation.js"></script>
+    <script src="js/cookieUtil.js"></script>
+    <script defer src="js/animation.js"></script>
     <script defer src="js/dialog.js"></script>
+    <script defer src="js/toastify.js"></script>
 </body>
 </html>

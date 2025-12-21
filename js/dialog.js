@@ -1,31 +1,3 @@
-const Cookie = {
-    set: (name, value, days = 7, path = '/') => {
-        const d = new Date();
-        d.setTime(d.getTime() + days*24*60*60*1000);
-        document.cookie = `${name}=${value}; expires=${d.toUTCString()}; path=${path}`;
-    },
-    get: (name) => {
-        const raw = Cookie.getRaw(name);
-
-        if (!raw) return null; 
-        if (raw === 'true') return true;
-        if (raw === 'false') return false;
-        if (!isNaN(raw)) {
-        return raw.includes('.') ? parseFloat(raw) : parseInt(raw, 10);
-        }
-        return raw;
-    },
-    getRaw: (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length !== 2) return null;
-        return parts.pop().split(';').shift();
-    },
-    remove: (name, path = '/') => {
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}`;
-    }
-};
-
 // Dialog 管理器
 const DialogManager = {
     el: document.getElementById('app-dialog'),
@@ -108,8 +80,15 @@ function checkTimezone() {
     // 获取本地时间与UTC的分钟差 (中国是 UTC+8，即 -480 分钟)
     const offset = new Date().getTimezoneOffset();
     const targetOffset = -480; 
-    const isShown = Cookie.get('timezoneDialogShown');
+    const storedTz = Cookie.get('userTimezone');
 
+    // 初始化选择框状态
+    const tzSelect = document.getElementById('timezone-select');
+    if (tzSelect && storedTz) {
+        tzSelect.value = storedTz;
+    }
+
+    const isShown = Cookie.get('timezoneDialogShown');
     // 如果偏差超过 1 分钟（考虑到部分浏览器的微小差异）
     if (!isShown && Math.abs(offset - targetOffset) > 1) {
         const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -118,7 +97,7 @@ function checkTimezone() {
             DialogManager.open(
                 'timezone',
                 'Timezone Difference Detected',
-                `Your current system time zone <b>(<span style="color:#ffbc00">${timeZone}</span>)</b> does not appear to be China Standard Time (UTC+8).<br>The page countdown will be synchronized according to <b>Beijing time.</b><br>This message will not be displayed again.`,
+                `Your current system time zone <b>(<span style="color:#ffbc00">${timeZone}</span>)</b> does not appear to be China Standard Time (UTC+8).<br>The page countdown will be synchronized according to <b>Beijing time.</b><br>You can change that by clicking the button at bottom right of the page.`,
             );
             Cookie.set('timezoneDialogShown', true)
         }, 500+Math.random()*500);

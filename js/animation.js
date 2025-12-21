@@ -1,3 +1,5 @@
+let userTzPreference = Cookie.get('userTimezone') || 'CST';
+
 // 创建背景动画元素
 function createBackgroundAnimation() {
     const bgAnimation = document.getElementById('bgAnimation');
@@ -110,9 +112,17 @@ function initHeaderElapsedDays() {
 // 更新倒计时
 function updateCountdown() {
     const now = new Date();
+    let targetDate;
     
-    // 目标时间: 2026年1月1日 00:00:00
-    const targetDate = new Date(2026, 0, 1, 0, 0, 0);
+    if (userTzPreference === 'CST') {
+        // 计算北京时间 2026-01-01 00:00:00 对应的本地时间戳
+        // 北京时间比 UTC 快 8 小时
+        targetDate = new Date(Date.UTC(2025, 11, 31, 16, 0, 0));
+    } 
+    else {
+        // 使用用户本地系统的 2026-01-01 00:00:00
+        targetDate = new Date(2026, 0, 1, 0, 0, 0);
+    }
     
     // 计算时间差
     const timeDiff = targetDate.getTime() - now.getTime();
@@ -177,7 +187,39 @@ function updateCountdown() {
         `${String(now.getSeconds()).padStart(2, '0')}`;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    const tzSelect = document.getElementById('timezone-select');
+
+    if (tzSelect) {
+        tzSelect.addEventListener('change', (e) => {
+            userTzPreference = e.target.value;
+            Cookie.set('userTimezone', userTzPreference, 30);
+            updateCountdown();
+
+            const tzName = e.target.value === 'CST' ? "Beijing Time (UTC+8)" : "System Local Time";
+            Toastify({
+                text: `<i class="fas fa-check-circle" style="margin-right: 8px; color: #00f2fe;"></i> Timezone switched to: ${tzName}`,
+                duration: 3000,
+                gravity: "top", 
+                position: "center",
+                escapeMarkup: false, // 允许渲染图标 HTML
+                stopOnFocus: true,
+                style: {
+                    background: "rgba(16, 36, 64, 0.1)", // 匹配 countdown-box 的深色背景
+                    color: "#ffffff",
+                    border: "1px solid rgba(79, 172, 254, 0.5)", // 匹配科技蓝边框
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(79, 172, 254, 0.2)",
+                    borderRadius: "12px",
+                    fontFamily: "'Aldrich', sans-serif",
+                    fontSize: "0.9rem",
+                    padding: "12px 24px",
+                    cursor: "default",
+                    backdropFilter: "blur(10px)"
+                }
+            }).showToast();
+        });
+    }
+
     createBackgroundAnimation();
     initTickerStrips();
     initHeaderElapsedDays();
