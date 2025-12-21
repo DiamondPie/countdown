@@ -176,6 +176,7 @@ header {
 
 .ticker-view {
     height: var(--digit-height);
+    color: #fff;
     gap: 4px;
     overflow: hidden;
     display: flex;
@@ -184,6 +185,10 @@ header {
     margin-bottom: 10px;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+}
+
+.ticker-view.warn {
+    color: rgb(240, 117, 117);
 }
 
 .ticker-view::after {
@@ -221,7 +226,6 @@ header {
     line-height: var(--digit-height);
     font-size: 4.5rem;
     font-weight: 100;
-    color: #ffffff;
     text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
@@ -237,6 +241,10 @@ header {
     color: #ffffff;
     line-height: 1;
     mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+}
+
+.static-value.warn {
+    color: rgb(240, 117, 117);
 }
 
 /* 进度条样式 */
@@ -282,7 +290,33 @@ header {
     /* 增加平滑过渡，防止跳色 */
     transition: color 0.5s ease; 
 }
+#progress-percentage.warn {
+    animation: glowPulse 1s ease-in-out infinite;
+    will-change: text-shadow;
+}
 
+@keyframes glowPulse {
+    0% {
+        text-shadow:
+            0 0 8px  rgba(240, 117, 117, 0.9),
+            0 0 16px rgba(240, 117, 117, 0.6),
+            0 0 28px rgba(240, 117, 117, 0.4);
+    }
+  
+    50% {
+        text-shadow:
+            0 0 4px  rgba(240, 117, 117, 0.5),
+            0 0 8px  rgba(240, 117, 117, 0.3),
+            0 0 14px rgba(240, 117, 117, 0.2);
+    }
+  
+    100% {
+        text-shadow:
+            0 0 8px  rgba(240, 117, 117, 0.9),
+            0 0 16px rgba(240, 117, 117, 0.6),
+            0 0 28px rgba(240, 117, 117, 0.4);
+    }
+}
 .progress-fill::after {
     content: '';
     position: absolute;

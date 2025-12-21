@@ -156,6 +156,9 @@ function updateCountdown() {
 
     if (percentEl) {
         percentEl.textContent = `${toFixedFloor(progressPercentage, 2)}%`;
+        if (progressPercentage >= 100) {
+            percentEl.classList.add('warn');
+        }
         // 设置 HSL 颜色，保持较高的饱和度(80%)和适中的亮度(70%)以确保护眼且亮丽
         percentEl.style.color = `hsl(${hue}, 80%, 70%)`;
         // 可选：添加一点发光感
@@ -190,18 +193,24 @@ function updateCountdown() {
     const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
     
     // 1. 更新天数
-    document.getElementById('days').textContent = days.toString().padStart(3, '0');
+    const dayEl = document.getElementById('days');
+    const dStr = days.toString().padStart(3, '0')
+    dayEl.textContent = dStr;
+    if (dStr === '000') dayEl.classList.add('warn')
     
     // 2. 更新滚动条
     const hStr = hours.toString().padStart(2, '0');
+    if (hStr === '00') document.getElementById('hour-view').classList.add('warn')
     updateStripPosition('hours-tens', hStr[0]);
     updateStripPosition('hours-ones', hStr[1]);
     
     const mStr = minutes.toString().padStart(2, '0');
+    if (mStr === '00') document.getElementById('minute-view').classList.add('warn')
     updateStripPosition('minutes-tens', mStr[0]);
     updateStripPosition('minutes-ones', mStr[1]);
 
     const sStr = seconds.toString().padStart(2, '0');
+    if (sStr === '00') document.getElementById('second-view').classList.add('warn')
     updateStripPosition('seconds-tens', sStr[0]);
     updateStripPosition('seconds-ones', sStr[1]);
     
@@ -209,9 +218,9 @@ function updateCountdown() {
     document.getElementById('day-text').textContent = days > 1 ? 'days':'day';
     document.getElementById('hour-text').textContent = hours > 1 ? 'hours':'hour'
 
-// ----------------------------
+    // ----------------------------
 
-document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+    document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
