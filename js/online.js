@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 获取本地存储的 Client ID
     let clientId = localStorage.getItem(STORAGE_KEY);
+    let heartbeatInterval = null; // 存储定时器ID
 
     async function sendHeartbeat() {
         try {
@@ -24,15 +25,15 @@ document.addEventListener('DOMContentLoaded', function () {
             if (response.ok) {
                 const data = await response.json();
                 
-                // 1. 更新页面显示的人数
+                // 更新页面显示的人数
                 if (onlineCountEl) {
                     onlineCountEl.innerText = data.online;
                     onlineCountSuffix.textContent = data.online > 1 ?
                         'people are gathering' :
-                        'person is waiting'
+                        'person is waiting';
                 }
 
-                // 2. 如果是新用户（本地没有ID或被服务端重置），保存ID
+                // 如果是新用户（本地没有ID或被服务端重置），保存ID
                 if (data.id && data.id !== clientId) {
                     clientId = data.id;
                     localStorage.setItem(STORAGE_KEY, clientId);
@@ -40,13 +41,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } catch (error) {
             console.warn('Heartbeat failed:', error);
-            // 失败时不做处理，保持上一次显示的数字即可
         }
     }
 
+    function startHeartbeat() {
+        // 避免重复定时器
+        if (!heartbeatInterval) {
+            heartbeatInterval = setInterval(sendHeartbeat, 10000);
+        }
+    }
+
+    function stopHeartbeat() {
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
+            heartbeatInterval = null;
+        }
+    }
+
+    // 页面可见性变化事件
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            // 页面失焦或挂后台，停止心跳
+            stopHeartbeat();
+        } else {
+            // 页面重新可见，立即发送一次心跳
+            sendHeartbeat();
+            startHeartbeat();
+        }
+    });
+
     // 页面加载后立即发送一次
     sendHeartbeat();
-
-    // 之后每 10 秒发送一次心跳 (后端超时设定为 30秒，所以 10-15秒是安全的)
-    setInterval(sendHeartbeat, 10000);
+    startHeartbeat();
 });
