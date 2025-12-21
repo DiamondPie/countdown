@@ -72,6 +72,7 @@ header {
     position: relative;
     display: inline-block;
     margin: 0 10px;
+    user-select: none;
 }
 
 /* 2026 字体设置 */
@@ -185,6 +186,7 @@ header {
     margin-bottom: 10px;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    user-select: none;
 }
 
 .ticker-view.warn {
