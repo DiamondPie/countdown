@@ -275,6 +275,12 @@ header {
     position: relative;
 }
 
+#progress-percentage {
+    font-weight: bold;
+    /* 增加平滑过渡，防止跳色 */
+    transition: color 0.5s ease; 
+}
+
 .progress-fill::after {
     content: '';
     position: absolute;

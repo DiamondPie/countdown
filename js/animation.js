@@ -165,10 +165,20 @@ function updateCountdown() {
     const elapsedYearMs = now.getTime() - startOfYear.getTime();
     
     let progressPercentage = Math.min(100, Math.max(0, (elapsedYearMs / totalYearMs) * 100));
-    
+    const percentEl = document.getElementById('progress-percentage');
+
     document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
-    document.getElementById('progress-percentage').textContent = `${progressPercentage.toFixed(2)}%`;
-    
+    // 更新进度百分比文字颜色
+    // 映射范围：0% 为色相 190 (青蓝), 100% 为色相 0 (红色)
+    const hue = 190 - (progressPercentage * 1.9); 
+
+    if (percentEl) {
+        percentEl.textContent = `${progressPercentage.toFixed(2)}%`;
+        // 设置 HSL 颜色，保持较高的饱和度(80%)和适中的亮度(70%)以确保护眼且亮丽
+        percentEl.style.color = `hsl(${hue}, 80%, 70%)`;
+        // 可选：添加一点发光感
+        percentEl.style.textShadow = `0 0 10px hsl(${hue}, 80%, 50%, 0.3)`;
+    }
     // 计算已过天数
     // const elapsedDays = Math.floor(elapsedYearMs / (1000 * 60 * 60 * 24));
     
@@ -185,6 +195,10 @@ function updateCountdown() {
         `${String(now.getHours()).padStart(2, '0')}:` +
         `${String(now.getMinutes()).padStart(2, '0')}:` +
         `${String(now.getSeconds()).padStart(2, '0')}`;
+
+// ----------------------------
+
+document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
