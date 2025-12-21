@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 1. 更新页面显示的人数
                 if (onlineCountEl) {
                     onlineCountEl.innerText = data.online;
-                    onlineCountSuffix = data.online > 1 ?
+                    onlineCountSuffix.textContent = data.online > 1 ?
                         'people are gathering' :
                         'person is waiting'
                 }
