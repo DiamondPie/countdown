@@ -200,17 +200,17 @@ function updateCountdown() {
     
     // 2. 更新滚动条
     const hStr = hours.toString().padStart(2, '0');
-    if (hStr === '00') document.getElementById('hour-view').classList.add('warn')
+    if (dStr === '000' && hStr === '00') document.getElementById('hour-view').classList.add('warn')
     updateStripPosition('hours-tens', hStr[0]);
     updateStripPosition('hours-ones', hStr[1]);
     
     const mStr = minutes.toString().padStart(2, '0');
-    if (mStr === '00') document.getElementById('minute-view').classList.add('warn')
+    if (dStr === '000' && hStr === '00' && mStr === '00') document.getElementById('minute-view').classList.add('warn')
     updateStripPosition('minutes-tens', mStr[0]);
     updateStripPosition('minutes-ones', mStr[1]);
 
     const sStr = seconds.toString().padStart(2, '0');
-    if (sStr === '00') document.getElementById('second-view').classList.add('warn')
+    if (dStr === '000' && hStr === '00' && mStr === '00' && sStr === '00') document.getElementById('second-view').classList.add('warn')
     updateStripPosition('seconds-tens', sStr[0]);
     updateStripPosition('seconds-ones', sStr[1]);
     
