@@ -15,6 +15,8 @@ body {
     align-items: center;
     overflow-x: hidden;
     position: relative;
+    min-height: 100vh;
+    padding-bottom: 80px; /* 为页脚留出空间，防止内容遮挡 */
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
 }
 
@@ -293,12 +295,48 @@ header {
 }
 
 footer {
-    margin-top: 40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     padding: 20px;
     color: #a8d0ff;
-    font-size: 1rem;
+    font-size: 0.95rem; /* 稍微调小一点，增加科技感 */
     text-align: center;
-    width: 100%;
+    background: transparent; /* 或者根据需要加半透明背景 */
+    z-index: 10;
+}
+
+/* 内部段落布局 */
+footer p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* 允许在空间不足时换行 */
+    gap: 10px;
+}
+
+/* 电脑端显示分隔符 */
+.footer-sep {
+    display: inline;
+    color: rgba(168, 208, 255, 0.4);
+}
+
+/* ================= 移动端适配 ================= */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 120px; /* 移动端页脚变高，增加底部边距 */
+    }
+
+    footer p {
+        flex-direction: column; /* 纵向排列 */
+        gap: 5px;
+    }
+
+    /* 移动端隐藏分隔符 */
+    .footer-sep {
+        display: none;
+    }
 }
 
 /* 动画效果 */
@@ -353,6 +391,19 @@ footer {
     .static-value { margin-top: 5px; }
     .countdown-label { font-size: 1rem; }
     .ticker-view { margin-top: 5px; margin-bottom: 0;}
+    body { 
+        padding-bottom: 120px; /* 移动端页脚变高，增加底部边距 */
+    }
+
+    footer p {
+        flex-direction: column; /* 纵向排列 */
+        gap: 5px;
+    }
+
+    /* 移动端隐藏分隔符 */
+    .footer-sep {
+        display: none;
+    }
 }
 
 @media (max-width: 600px) {
