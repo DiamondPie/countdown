@@ -1,8 +1,6 @@
 /* ================= 在线人数心跳模块 ================= */
 document.addEventListener('DOMContentLoaded', function () {
-    // 后端 API 地址，本地开发时改为 localhost:8000，上线时改为你的服务器地址
-    // 注意：如果是 https 网站，后端也必须是 https，或者通过 Nginx 反代
-    const API_URL = 'https://countdown-online.onrender.com/'; 
+    const API_URL = 'https://countdown-online.onrender.com/online'; 
 
     const onlineCountEl = document.getElementById('online-count');
     const onlineCountSuffix = document.getElementById('person-suffix');
