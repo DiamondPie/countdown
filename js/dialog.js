@@ -147,8 +147,8 @@ function checkTimezone() {
         setTimeout(() => {
             DialogManager.open(
                 'timezone',
-                'Timezone Difference Detected',
-                `Your current system time zone <b>(<span style="color:#ffbc00">${timeZone}</span>)</b> does not appear to be China Standard Time (UTC+8).<br>The page countdown will be synchronized according to <b>Beijing time.</b><br>You can change that by clicking the button at bottom right of the page.`,
+                I18N.dialog.timezone.title,
+                t(I18N.dialog.timezone.content, { tz: timeZone }),
             );
             Cookie.set('timezoneDialogShown', true)
         }, 500+Math.random()*500);
@@ -166,8 +166,8 @@ function triggerNewYear() {
     
     DialogManager.open(
         'celebrate',
-        '2026 已至！',
-        '钟声敲响，旧岁已过。<br>愿你在新的一年里，代码无 Bug，人生无 Error！<br><b>新年快乐！</b>'
+        I18N.dialog.celebrate.title,
+        I18N.dialog.celebrate.content
     );
 }
 

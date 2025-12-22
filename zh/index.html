@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
-        /* 自定义从右侧滑入的动画 */
         @keyframes toastify-slideInRight {
             from {
                 transform: translateY(100%);
@@ -19,7 +18,6 @@
             }
         }
 
-        /* 自定义 Toastify 消失动画：向右侧滑出 */
         @keyframes toastify-right-out {
             0% {
                 transform: translateY(0);
@@ -31,27 +29,24 @@
             }
         }
 
-        /* 覆盖 Toastify 的默认进入类 */
         .toastify.on {
             animation: toastify-slideInRight 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards;
         }
 
-        /* 当 Toast 被移除时（消失中） */
-        /* 注意：Toastify 在消失时会移除 .on 类，我们可以通过一个简单的类名覆盖或让 transition 处理 */
         .toastify:not(.on) {
             animation: toastify-right-out 0.4s ease-in forwards;
         }
 
-        /* 移动端优化：确保不会因为滑出动作导致页面横向滚动条出现 */
         body {
             overflow-x: hidden;
         }
     </style>
     <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Aldrich&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/timezone_menu.css">
-    <link rel="stylesheet" type="text/css" href="css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/timezone_menu.css">
+    <link rel="stylesheet" type="text/css" href="../css/dialog.css">
+    <script src="../i18n/zh.js"></script>
 </head>
 <body>
     <div class="bg-animation" id="bgAnimation"></div>
@@ -59,11 +54,11 @@
     <div class="container">
         <header>
             <div class="context-text">
-                <span class="days-highlight" id="header-elapsed-days">0</span> <span id="day-plural">days</span> have been passed in 2025.
+                2025 年已经过去了 <span class="days-highlight" id="header-elapsed-days">0</span> <span id="day-plural">天</span>
             </div>
 
             <div class="hero-wrapper">
-                <span class="connector-text">Until</span>
+                <span class="connector-text">距离</span>
                 
                 <div class="year-visual">
                     <div class="year-text">
@@ -80,7 +75,7 @@
                     </div>
                 </div>
 
-                <span class="connector-text">Remaining</span>
+                <span class="connector-text">年结束还有</span>
             </div>
         </header>
         
@@ -130,7 +125,7 @@
             
             <div class="progress-container fade-in">
                 <div class="progress-title">
-                    <span>2025 Progress</span>
+                    <span>2025 年进度</span>
                     <span id="progress-percentage">0%</span>
                 </div>
                 <div class="progress-bar">
@@ -138,7 +133,7 @@
                 </div>
                 <div class="year-info">
                     <span>2025.1.1</span>
-                    <span id="current-date">Today</span>
+                    <span id="current-date">今天是</span>
                     <span>2025.12.31</span>
                 </div>
             </div>
@@ -146,11 +141,11 @@
             <div class="timezone-fab-container">
                 <div class="timezone-fab-menu">
                     <div class="timezone-options">
-                        <span class="tz-label">Select Timezone</span>
+                        <span class="tz-label">选择时区：</span>
                         <div class="select-wrapper">
                             <select id="timezone-select">
-                                <option value="CST">Beijing</option>
-                                <option value="LOCAL">System</option>
+                                <option value="CST">北京时间</option>
+                                <option value="LOCAL">系统时间</option>
                             </select>
                             <i class="fas fa-chevron-down"></i>
                         </div>
@@ -164,19 +159,23 @@
             </main>
         
             <footer>
-                <p><span><span style="color:rgb(43,203,254); margin-right: 5px;">●</span><span id="online-count" style="color: #f0f8ff">1</span> <span id="person-suffix">person is waiting</span> for the new year!</p>
+                <p><span>
+                    <span style="color:rgb(43,203,254); margin-right: 5px;">●</span>
+                    <span id="online-count" style="color: #f0f8ff">1</span> 
+                    <span id="person-suffix">人正在等待</span>新年的到来！
+                </span></p>
                 <p>
                     <span>© 2025 DiamondPie</span>
                     <span class="footer-sep">|</span>
                     
-                    <span>Open-source at 
+                    <span>已在 
                         <a style="color:#f0f8ff; text-decoration: none;" href="https://github.com/DiamondPie/countdown" target="_blank">
                             <i class="fa-brands fa-github" style="margin-right: 5px;"></i>Github
-                        </a>
+                        </a> 开源
                     </span>
                     <span class="footer-sep">|</span>
                     
-                    <span>Update time: <span id="update-time"></span></span>
+                    <span>更新时间：<span id="update-time"></span></span>
                 </p>
             </footer>
 
@@ -197,11 +196,11 @@
         </div>
     </dialog>
 
-    <script src="js/util.js"></script>
+    <script src="../js/util.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
-    <script defer src="js/animation.js"></script>
-    <script defer src="js/dialog.js"></script>
-    <script defer src="js/toastify.js"></script>
-    <script defer src="js/online.js"></script>
+    <script defer src="../js/toastify.js"></script>
+    <script defer src="../js/animation.js"></script>
+    <script defer src="../js/dialog.js"></script>
+    <script defer src="../js/online.js"></script>
 </body>
 </html>

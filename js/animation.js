@@ -108,7 +108,7 @@ function initHeaderElapsedDays() {
     });
 
     const dayPlural = document.getElementById('day-plural');
-    dayPlural.textContent = elapsedDays > 1 ? 'days':'day';
+    dayPlural.textContent = elapsedDays > 1 ? I18N.day_text.plural:I18N.day_text.singular;
 }
 
 function getTargetDateByPreference() {
@@ -171,7 +171,7 @@ function updateCountdown() {
     // const elapsedEl = document.getElementById('header-elapsed-days');
     // if (elapsedEl) elapsedEl.textContent = elapsedDays;
     
-    document.getElementById('current-date').textContent = `Today is ` +
+    document.getElementById('current-date').textContent = I18N.today_is + ' ' +
         `${now.getFullYear()}.` +
         `${String(now.getMonth() + 1).padStart(2, '0')}.` +
         `${String(now.getDate()).padStart(2, '0')}`;
@@ -215,8 +215,8 @@ function updateCountdown() {
     updateStripPosition('seconds-ones', sStr[1]);
     
     // 3. 处理复数
-    document.getElementById('day-text').textContent = days > 1 ? 'days':'day';
-    document.getElementById('hour-text').textContent = hours > 1 ? 'hours':'hour'
+    document.getElementById('day-text').textContent = days > 1 ? I18N.countdown.day.plural:I18N.countdown.day.singular;
+    document.getElementById('hour-text').textContent = hours > 1 ? I18N.countdown.hour.plural:I18N.countdown.hour.singular
 
     // ----------------------------
 
@@ -232,10 +232,10 @@ document.addEventListener('DOMContentLoaded', function () {
             Cookie.set('userTimezone', userTzPreference, 30);
             updateCountdown();
 
-            const tzName = e.target.value === 'CST' ? "Beijing Time (UTC+8)" : "System Local Time";
+            const tzName = e.target.value === 'CST' ? I18N.beijing_time : I18N.system_local_time;
             const toastContent = debug ? 
-                '<i class="fa-solid fa-circle-xmark" style="margin-right: 8px; color: #e8466c;"></i> Timezone switching is unavailable under debugger mode.' :
-                `<i class="fas fa-check-circle" style="margin-right: 8px; color: #00f2fe;"></i> Timezone switched to: ${tzName}`
+                `<i class="fa-solid fa-circle-xmark" style="margin-right: 8px; color: #e8466c;"></i> ${I18N.timezone_switching_unavailable}` :
+                `<i class="fas fa-check-circle" style="margin-right: 8px; color: #00f2fe;"></i> ${I18N.timezone_switched_to}${tzName}`
             Toastify({
                 text: toastContent,
                 duration: 3000,

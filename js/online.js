@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (onlineCountEl) {
                     onlineCountEl.innerText = data.online;
                     onlineCountSuffix.textContent = data.online > 1 ?
-                        'people are gathering' :
-                        'person is waiting';
+                        I18N.online.count_suffix.plural :
+                        I18N.online.count_suffix.singular;
                 }
 
                 // 如果是新用户（本地没有ID或被服务端重置），保存ID
