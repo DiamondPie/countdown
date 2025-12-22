@@ -366,6 +366,12 @@ footer p {
     gap: 10px;
 }
 
+footer a {
+    color:#f0f8ff; 
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* 电脑端显示分隔符 */
 .footer-sep {
     display: inline;
