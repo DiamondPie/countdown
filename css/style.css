@@ -16,7 +16,7 @@ body {
     overflow-x: hidden;
     position: relative;
     min-height: 100vh;
-    padding-bottom: 80px; /* 为页脚留出空间，防止内容遮挡 */
+    padding-bottom: 70px; /* 为页脚留出空间，防止内容遮挡 */
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
 }
 
