@@ -25,3 +25,11 @@ const Cookie = {
         document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}`;
     }
 };
+
+function t(key, vars = {}) {
+    let text = key;
+    for (const k in vars) {
+        text = text.replaceAll(`{${k}}`, vars[k]);
+    }
+    return text;
+}
