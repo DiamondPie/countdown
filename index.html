@@ -6,9 +6,9 @@
     <script>
         const lang = navigator.language || navigator.userLanguage;
         if (lang.startsWith("zh")) {
-            window.location.href = "/zh/";
+            window.location.replace("/zh/");
         } else {
-            window.location.href = "/en/";
+            window.location.replace("/en/");
         }
     </script>
 </head>
