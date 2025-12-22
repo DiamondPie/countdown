@@ -243,6 +243,7 @@ header {
     color: #ffffff;
     line-height: 1;
     mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    user-select: none;
 }
 
 .static-value.warn {
