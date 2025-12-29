@@ -150,14 +150,21 @@
     }
 
     .tz-label {
-        font-size: 0.7rem;
+        font-size: 0.9rem;
         width: 100%;
         text-align: center;
     }
 
     #timezone-select {
         width: 100%;
+        line-height: 1.5;
         font-size: 0.8rem;
         text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .timezone-fab-menu:hover .timezone-options {
+        width: 50vw;
     }
 }
